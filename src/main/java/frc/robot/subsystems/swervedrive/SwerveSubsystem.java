@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
@@ -18,17 +22,23 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.subsystems.Vision;
+
 import java.io.File;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -41,6 +51,7 @@ import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+import edu.wpi.first.math.Matrix;
 
 public class SwerveSubsystem extends SubsystemBase
 {
@@ -52,6 +63,19 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * AprilTag field layout.
    */
+
+ private Vision vision = new Vision();
+
+  /*
+   * Variables for saving the vision temporarily
+   */
+  Optional<EstimatedRobotPose> visionEsimatedPoseObj; //The Object that contains the Estimated Pose from Vision
+  Matrix<N3, N1> visionEsimatedStdDevs; //The Standard Deviations of the Vision Estimated Pose
+
+  /**
+   * Maximum speed of the robot in meters per second, used to limit acceleration.
+   */
+
   private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   /**
@@ -176,6 +200,7 @@ public class SwerveSubsystem extends SubsystemBase
           drive(ChassisSpeeds.fromFieldRelativeSpeeds(0,
                                                       0,
                                                       controller.headingCalculate(getHeading().getRadians(),
+                                                      //attempted Degrees from Radians
                                                                                   getSpeakerYaw().getRadians()),
                                                       getHeading())
                );
@@ -379,7 +404,25 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-  }
+      visionEsimatedPoseObj = vision.getEstimatedGlobalPose();  //Get the Pose that Vision determines
+
+      // Add the Estimated Vision Pose to the Swerve Estimated Pose with the Timestamp and Estimated Standard Deviations so that the PoseEstimator
+      // Can do the calcualtions for it being in the past and how confident the Vision is. 
+      //
+      if(visionEsimatedPoseObj.isPresent()){
+        double Pose[] = {0,0,0};
+
+        
+        Pose[0] = visionEsimatedPoseObj.get().estimatedPose.getX();
+        Pose[1] = visionEsimatedPoseObj.get().estimatedPose.getY();  
+        Pose[2] = visionEsimatedPoseObj.get().estimatedPose.toPose2d().getRotation().getDegrees();
+        visionEsimatedStdDevs = vision.getEstimationStdDevs(visionEsimatedPoseObj.get().estimatedPose.toPose2d()); //Get the Standard Deviation
+
+        SmartDashboard.putNumberArray("Photon Pose", Pose);
+        //SmartDashboard.putString("Photon Pose", visionEsimatedPoseObj.get().estimatedPose.toString());
+        swerveDrive.addVisionMeasurement(visionEsimatedPoseObj.get().estimatedPose.toPose2d(), visionEsimatedPoseObj.get().timestampSeconds, visionEsimatedStdDevs);
+      }
+    }
 
   @Override
   public void simulationPeriodic()
