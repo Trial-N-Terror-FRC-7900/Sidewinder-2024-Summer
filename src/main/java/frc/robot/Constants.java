@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean constants. This
@@ -63,5 +66,17 @@ public final class Constants
     public static final Transform3d RobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(10), 0, Units.inchesToMeters(19.5)), new Rotation3d(0,0,0));
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+  }
+
+  public static class GoalPathConstants{
+    public static final double Xcord = 2;
+    public static final double Ycord = 6;
+    public static final double Xcord2 = 3;
+    public static final double Ycord2 = 6;
+    public static final Pose2d goalpose = new Pose2d(Xcord, Ycord, Rotation2d.fromDegrees(0));
+    public static final Pose2d goalpose2 = new Pose2d(Xcord2, Ycord2, Rotation2d.fromDegrees(90));
+    public static final PathConstraints goalPathConstraints = new PathConstraints( 4, 2, Units.degreesToRadians(360), Units.degreesToRadians(540));
+    public static final int goalEndVelocity = 0;
+    public static final float rotationDistanceDelay = 0;
   }
 }
