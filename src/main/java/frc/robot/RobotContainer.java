@@ -131,25 +131,24 @@ public class RobotContainer
   private void configureBindings()
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-    driverXbox.b().whileTrue(
-        AutoBuilder.pathfindToPose(
-        new Pose2d(0, 0, Rotation2d.fromDegrees(90)), 
+    Command homePose = AutoBuilder.pathfindToPose(
+        new Pose2d(0, 0, Rotation2d.fromDegrees(0)), 
         Constants.GoalPathConstants.goalPathConstraints,
         Constants.GoalPathConstants.goalEndVelocity,
         Constants.GoalPathConstants.rotationDistanceDelay
-        )
-      );
-    driverXbox.y().whileTrue(
-      AutoBuilder.pathfindToPose(
-      new Pose2d(0.25, 0.7, Rotation2d.fromDegrees(0)), 
-      Constants.GoalPathConstants.goalPathConstraints,
-      Constants.GoalPathConstants.goalEndVelocity,
-      Constants.GoalPathConstants.rotationDistanceDelay
-      )
+        );
+
+    Command testPose = AutoBuilder.pathfindToPose(
+    new Pose2d(0.25, 0.7, Rotation2d.fromDegrees(0)), 
+    Constants.GoalPathConstants.goalPathConstraints,
+    Constants.GoalPathConstants.goalEndVelocity,
+    Constants.GoalPathConstants.rotationDistanceDelay
     );
+
+    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+    driverXbox.b().whileTrue(homePose);
+    driverXbox.y().whileTrue(testPose);
     //driverXbox.y().whileTrue(drivebase.aimAtSpeaker(2));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     
