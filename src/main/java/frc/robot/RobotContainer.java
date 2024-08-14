@@ -132,14 +132,14 @@ public class RobotContainer
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     Command homePose = AutoBuilder.pathfindToPose(
-        new Pose2d(0, 0, Rotation2d.fromDegrees(0)), 
+        new Pose2d(1.8, 6, Rotation2d.fromDegrees(0)), 
         Constants.GoalPathConstants.goalPathConstraints,
         Constants.GoalPathConstants.goalEndVelocity,
         Constants.GoalPathConstants.rotationDistanceDelay
         );
 
     Command testPose = AutoBuilder.pathfindToPose(
-    new Pose2d(0.25, 0.7, Rotation2d.fromDegrees(0)), 
+    new Pose2d(2.9, 7, Rotation2d.fromDegrees(90)), 
     Constants.GoalPathConstants.goalPathConstraints,
     Constants.GoalPathConstants.goalEndVelocity,
     Constants.GoalPathConstants.rotationDistanceDelay

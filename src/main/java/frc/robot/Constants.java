@@ -40,7 +40,7 @@ public final class Constants
   {
 
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
+    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.15, 0, 0.03);
   }
 
   public static final class DrivebaseConstants
@@ -74,6 +74,7 @@ public final class Constants
     public static final int goalEndVelocity = 0;
     public static final float rotationDistanceDelay = 0;
   }
+
 }
 
 
