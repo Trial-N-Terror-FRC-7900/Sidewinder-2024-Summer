@@ -29,6 +29,7 @@ import javax.sound.sampled.AudioFormat;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 
 /**
@@ -127,28 +128,55 @@ public class RobotContainer
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
 
+   //PATHFIND TO POINT 
+   Pose2d targetPose = new Pose2d(2.9, 7, Rotation2d.fromDegrees(90));
+
+   PathConstraints poseConstraints = new PathConstraints(
+    3.0,
+    4.0,
+    540, 
+    720);
+
+    Command testPose = AutoBuilder.pathfindToPose(
+    targetPose, 
+    poseConstraints);
+
+   //PATHFIND TO PATH
+   PathPlannerPath path = PathPlannerPath.fromPathFile("Photon Testing");
+
+   PathConstraints pathConstraints = new PathConstraints(
+    3.0,
+    4.0,
+    540, 
+    720);
+
+   Command photonTesting = AutoBuilder.pathfindThenFollowPath(
+    path,
+    pathConstraints);
    
   private void configureBindings()
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    Command homePose = AutoBuilder.pathfindToPose(
+/* 
+        Command homePose = AutoBuilder.pathfindToPose(
         new Pose2d(0, 0, Rotation2d.fromDegrees(0)), 
         Constants.GoalPathConstants.goalPathConstraints,
         Constants.GoalPathConstants.goalEndVelocity,
         Constants.GoalPathConstants.rotationDistanceDelay
         );
 
-    Command testPose = AutoBuilder.pathfindToPose(
-    new Pose2d(0.25, 0.7, Rotation2d.fromDegrees(0)), 
-    Constants.GoalPathConstants.goalPathConstraints,
-    Constants.GoalPathConstants.goalEndVelocity,
-    Constants.GoalPathConstants.rotationDistanceDelay
-    );
-
+        Command testPose = AutoBuilder.pathfindToPose(
+        new Pose2d(2.9, 7, Rotation2d.fromDegrees(90)), 
+        Constants.GoalPathConstants.goalPathConstraints,
+        Constants.GoalPathConstants.goalEndVelocity,
+        Constants.GoalPathConstants.rotationDistanceDelay
+        ).until(null);
+*/
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-    driverXbox.b().whileTrue(homePose);
+    driverXbox.b().whileTrue(photonTesting);
     driverXbox.y().whileTrue(testPose);
+
     //driverXbox.y().whileTrue(drivebase.aimAtSpeaker(2));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     

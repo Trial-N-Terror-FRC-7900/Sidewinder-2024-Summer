@@ -69,11 +69,14 @@ public final class Constants
   }
 
   public static class GoalPathConstants{
-    public static final Pose2d HomePose00 = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    public static final double Xcord = 2;
+    public static final double Ycord = 6;
+    public static final double Xcord2 = 3;
+    public static final double Ycord2 = 6;
+    public static final Pose2d goalpose = new Pose2d(Xcord, Ycord, Rotation2d.fromDegrees(0));
+    public static final Pose2d goalpose2 = new Pose2d(Xcord2, Ycord2, Rotation2d.fromDegrees(90));
     public static final PathConstraints goalPathConstraints = new PathConstraints( 4, 2, Units.degreesToRadians(360), Units.degreesToRadians(540));
     public static final int goalEndVelocity = 0;
     public static final float rotationDistanceDelay = 0;
   }
 }
-
-
