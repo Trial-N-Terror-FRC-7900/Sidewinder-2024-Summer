@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.389838538542325,
-      "y": 5.975028687646028
+      "x": 2,
+      "y": 2
     },
-    "rotation": -90.48554583000814
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "ApproachBlueAmp"
           }
         }
       ]
