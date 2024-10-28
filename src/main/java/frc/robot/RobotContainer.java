@@ -29,6 +29,7 @@ import javax.sound.sampled.AudioFormat;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 
 /**
@@ -47,6 +48,7 @@ public class RobotContainer
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
 
+  PathPlannerPath toSpeaker2 = PathPlannerPath.fromPathFile("Example Path");
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -139,16 +141,19 @@ public class RobotContainer
         );
 
     Command testPose = AutoBuilder.pathfindToPose(
-    new Pose2d(2.9, 7, Rotation2d.fromDegrees(90)), 
-    Constants.GoalPathConstants.goalPathConstraints,
-    Constants.GoalPathConstants.goalEndVelocity,
-    Constants.GoalPathConstants.rotationDistanceDelay
-    );
+      new Pose2d(2.9, 7, Rotation2d.fromDegrees(90)), 
+      Constants.GoalPathConstants.goalPathConstraints,
+      Constants.GoalPathConstants.goalEndVelocity,
+      Constants.GoalPathConstants.rotationDistanceDelay
+      );
+
+    Command toSpeaker = AutoBuilder.pathfindThenFollowPath(toSpeaker2, Constants.GoalPathConstants.goalPathConstraints);
+
+      
 
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-    driverXbox.b().whileTrue(homePose);
-    driverXbox.y().whileTrue(testPose);
+    driverXbox.b().onTrue(toSpeaker);
     //driverXbox.y().whileTrue(drivebase.aimAtSpeaker(2));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     
