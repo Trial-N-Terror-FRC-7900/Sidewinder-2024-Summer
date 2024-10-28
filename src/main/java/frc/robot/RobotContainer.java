@@ -29,7 +29,6 @@ import javax.sound.sampled.AudioFormat;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 
 /**
@@ -55,11 +54,6 @@ public class RobotContainer
   {
 
  // A chooser for autonomous commands
-
-
-
- 
-
 
 /*
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
@@ -151,25 +145,9 @@ public class RobotContainer
     Constants.GoalPathConstants.rotationDistanceDelay
     );
 
-
-    PathPlannerPath blueAmpPath = PathPlannerPath.fromPathFile("LookAtBlueAmp");
-
-    PathConstraints blueAmpConstraints = new PathConstraints
-     (3.0, 
-     4.0, 
-     Units.degreesToRadians(540), 
-     Units.degreesToRadians(720));
-
-    Command pathBlueAmp = AutoBuilder.pathfindThenFollowPath(
-      blueAmpPath,
-      blueAmpConstraints);
-
-
-
-
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-    driverXbox.b().whileTrue(pathBlueAmp);
+    driverXbox.b().whileTrue(homePose);
     driverXbox.y().whileTrue(testPose);
     //driverXbox.y().whileTrue(drivebase.aimAtSpeaker(2));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
