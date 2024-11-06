@@ -49,6 +49,7 @@ public class RobotContainer
                                                                          "swerve/neo"));
 
   PathPlannerPath toSpeaker2 = PathPlannerPath.fromPathFile("Example Path");
+  PathPlannerPath toAngledSpeaker2 = PathPlannerPath.fromPathFile("Angled Path");
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -149,11 +150,14 @@ public class RobotContainer
 
     Command toSpeaker = AutoBuilder.pathfindThenFollowPath(toSpeaker2, Constants.GoalPathConstants.goalPathConstraints);
 
+    Command toAngledSpeaker = AutoBuilder.pathfindThenFollowPath(toAngledSpeaker2, Constants.GoalPathConstants.goalPathConstraints);
+
       
 
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
     driverXbox.b().onTrue(toSpeaker);
+    driverXbox.y().onTrue(toAngledSpeaker);
     //driverXbox.y().whileTrue(drivebase.aimAtSpeaker(2));
     // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     
