@@ -421,7 +421,6 @@ public class SwerveSubsystem extends SubsystemBase
         SmartDashboard.putNumberArray("Photon Pose", Pose);
         //SmartDashboard.putString("Photon Pose", visionEsimatedPoseObj.get().estimatedPose.toString());
         swerveDrive.addVisionMeasurement(visionEsimatedPoseObj.get().estimatedPose.toPose2d(), visionEsimatedPoseObj.get().timestampSeconds, visionEsimatedStdDevs);
-        System.out.println("Im working");
       }
     }
 
